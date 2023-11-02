@@ -3,10 +3,8 @@ let button = document.querySelector("button");
 let moviesDiv = document.querySelector("#movies");
 let defaultMovieDiv = document.querySelector("#movies p");
 let apiKey = "e80c71d6";
-let loader = document.querySelector(".one");
 let moviesPara = document.querySelector("#moviesPara");
 let pagination = document.querySelector("#pagination");
-loader.style.display = "none";
 moviesPara.style.display = "block";
 let page = 1;
 
@@ -17,7 +15,6 @@ let noOfPage;
 // todo  display movies on screen
 function displayMovies(data, page) {
   console.log(page);
-  loader.style.display = "none";
   // console.log(data);
   data.Search.forEach((el) => {
     let movieCard = document.createElement("div");
@@ -98,7 +95,6 @@ function debounce(fetchTheData, delay) {
   return () => {
     // console.log("api called");
     if (timeOutId) {
-      loader.style.display = "block";
       moviesPara.style.display = "none";
       clearTimeout(timeOutId);
     }
