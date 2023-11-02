@@ -8,12 +8,17 @@ let moviesPara = document.querySelector("#moviesPara");
 let pagination = document.querySelector("#pagination");
 loader.style.display = "none";
 moviesPara.style.display = "block";
+let page = 1;
 
+let previousBtn;
+let pageBtn;
+let nextBtn;
+let noOfPage;
 // todo  display movies on screen
 function displayMovies(data, page) {
-  //   console.log(data.Search);
+  console.log(page);
   loader.style.display = "none";
-  console.log(data);
+  // console.log(data);
   data.Search.forEach((el) => {
     let movieCard = document.createElement("div");
     movieCard.classList.add("movieCard");
@@ -26,74 +31,59 @@ function displayMovies(data, page) {
     document.getElementById("movies").appendChild(movieCard);
   });
 
-  //display button
+  //pagination html
   let totalResult = parseInt(data.totalResults);
-  let noOfPage = Math.floor(totalResult / 10 + 1);
-  console.log(totalResult);
-  console.log(noOfPage);
+  noOfPage = Math.floor(totalResult / 10 + 1);
   pagination.innerHTML = `
       <button id="Previous">Previous</button>
       <span id="page">Page ${page} of ${noOfPage}</span>
       <button id="Next">Next</button>
     `;
-  console.log(page);
-  let previousBtn = document.querySelector("#Previous");
-  let pageBtn = document.querySelector("#page");
-  let nextBtn = document.querySelector("#Next");
-  paginationWHenClick(previousBtn, pageBtn, nextBtn, noOfPage);
+  // console.log(page);
+  //btn previous and next
+  previousBtn = document.querySelector("#Previous");
+  pageBtn = document.querySelector("#page");
+  nextBtn = document.querySelector("#Next");
+  paginationAfterClick(previousBtn,pageBtn,nextBtn,noOfPage);
 }
 
-//todo for pagination click on button give us more data of movies
-function paginationWHenClick(previousBtn, pageBtn, nextBtn, noOfPage) {
+// console.log(nextBtn);
+//todo pagination after click
+function paginationAfterClick(previousBtn,pageBtn,nextBtn,noOfPage){
   previousBtn.addEventListener("click", () => {
-    page = 1 <= page-- <= noOfPage ? page-- : page;
-    // nextBtn.disabled = true;
-    // if(page==1){
-    //     previousBtn.disabled = false;
-    // }
-    console.log(page);
-    pageBtn.innerHTML = "";
-    pageBtn.innerHTML = `Page ${page} of ${noOfPage}`;
-    moviesDiv.innerHTML = "";
+    // console.log(page);
+    page--;
     fetchTheData(page);
   });
   nextBtn.addEventListener("click", () => {
-    page = 1 <= page++ <= noOfPage ? page++ : page;
-    // previousBtn.disabled = true;
-    // if(page == noOfPage){
-    //     nextBtn.disabled = false;
-    // }
-    console.log(page);
-    pageBtn.innerHTML = "";
-    pageBtn.innerHTML = `Page ${page} of ${noOfPage}`;
+    page++;
+    // console.log(page);
     fetchTheData(page);
   });
 }
 
 //todo fetch the data from api
 async function fetchTheData(page) {
-  page = 1;
   let data = null;
   try {
     let searchData = searchText.value;
-    console.log(searchData);
+    // console.log(searchData);
     moviesDiv.innerHTML = "";
     data = await fetch(
       `https://www.omdbapi.com/?&apikey=${apiKey}&s=${searchData}&page=${page}`
     );
     data = await data.json();
-    // console.log(data.Response);
-    if (data.Response == "False") {
-      moviesDiv.innerText =
-        "Too many results. Please provide a more specific search term.";
-      console.log("Mansi");
-      return;
-    } else {
-      displayMovies(data, page);
+    displayMovies(data, page);
+    if(page == 1){
+      previousBtn.disabled = true;
+      nextBtn.disabled = false;
+    }else if(page == noOfPage){
+      nextBtn.disabled = true; 
+      previousBtn.disabled = false;
     }
-    console.log(data);
   } catch (err) {
-    console.log(err);
+    moviesDiv.innerText = 
+      "Too many results. Please provide a more specific search term.";
   }
 }
 
@@ -101,14 +91,14 @@ async function fetchTheData(page) {
 function debounce(fetchTheData, delay) {
   let timeOutId;
   return () => {
-    console.log("api called");
+    // console.log("api called");
     if (timeOutId) {
       loader.style.display = "block";
       moviesPara.style.display = "none";
       clearTimeout(timeOutId);
     }
     timeOutId = setTimeout(() => {
-      fetchTheData();
+      fetchTheData(page);
     }, delay);
   };
 }
