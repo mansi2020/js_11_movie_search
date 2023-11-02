@@ -81,6 +81,11 @@ async function fetchTheData(page) {
       nextBtn.disabled = true; 
       previousBtn.disabled = false;
     }
+    if(noOfPage == 1){
+      nextBtn.disabled = true; 
+      previousBtn.disabled = true;
+    }
+    
   } catch (err) {
     moviesDiv.innerText = 
       "Too many results. Please provide a more specific search term.";
@@ -98,6 +103,7 @@ function debounce(fetchTheData, delay) {
       clearTimeout(timeOutId);
     }
     timeOutId = setTimeout(() => {
+      page = 1;
       fetchTheData(page);
     }, delay);
   };
@@ -106,3 +112,5 @@ function debounce(fetchTheData, delay) {
 //todo calling debouncing function when we search some data on searchbar
 let debounceMovies = debounce(fetchTheData, 2000);
 searchText.addEventListener("input", debounceMovies);
+
+//page-4
