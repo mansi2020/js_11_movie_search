@@ -88,7 +88,7 @@ body {
 }
 
 header {
-  background-color: #333;
+  background: linear-gradient(#333,black,#333);
   color: #fff;
   text-align: center;
   padding: 20px 0;
@@ -181,4 +181,11 @@ button:disabled {
   box-shadow: 2px 2px 10px #333;
   transform: scale(1.1);
   cursor: pointer;
+  color:white;
+  background-color:lightpink;
+}
+
+header h1{
+  font-size: 3rem;
+  text-shadow: 2px 2px 10px yellow;
 }
